@@ -33,7 +33,7 @@ InputBox::InputBox(Ui* u): _ui(u) {
         .addVertexBuffer(frame->buffer, 0, Magnum::Shaders::VertexColor3D::Position{}, Magnum::Shaders::VertexColor3D::Color{});
     _drawables.push_back(frame);
 
-    FontContainer* f = _ui->loadFont("DejaVuSans.ttf");
+    FontContainer* f = _ui->loadFont("DejaVuSans.ttf", 3.14f);
 
     DrawableUi* textlayer = new DrawableUi(1);
     textlayer->text.reset(new Magnum::Text::Renderer2D(*f->font, f->cache, 0.035f, Magnum::Text::Alignment::TopLeft));
@@ -47,15 +47,6 @@ InputBox::InputBox(Ui* u): _ui(u) {
     textlayer->textShader.setVectorTexture(f->cache.texture());
     textlayer->text->render("This is a test");
     _drawables.push_back(textlayer);
-//    textlayer->reserve(40, BufferUsage::DynamicDraw, BufferUsage::StaticDraw);
-//    _font = _manager.loadAndInstantiate("FreeTypeFont");
-//    if (!_font){
-//    	std::cout << "FreeTypeFont Not loaded" << std::endl;
-//    }
-//    std::vector<std::string> plugins = _manager.pluginList();
-//	for(auto it = plugins.begin(); it != plugins.end(); ++it) {
-//		std::cout << "Loaded Plugin: " << (*it) << std::endl;
-//	}
 }
 
 InputBox::~InputBox(){

@@ -18,7 +18,7 @@ class Ui {
 public:
 	Ui(Centauri *);
 	void drawEvent();
-	FontContainer* loadFont(std::string);
+	FontContainer* loadFont(std::string, float);
 	~Ui();
 
 private:

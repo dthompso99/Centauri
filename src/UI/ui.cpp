@@ -15,14 +15,14 @@ void Ui::drawEvent() {
 	}
 }
 
-FontContainer* Ui::loadFont(std::string fontName) {
+FontContainer* Ui::loadFont(std::string fontName, float fontSize) {
 	if (_fonts.find(fontName) == _fonts.end()) {
 		_fonts[fontName] = new FontContainer(_manager.loadAndInstantiate("FreeTypeFont"));
 		if (!_fonts[fontName]) {
 			std::cout << "FreeTypeFont Not loaded" << std::endl;
 		} else {
 			Magnum::Utility::Resource rs("fonts");
-			if (!_fonts[fontName]->font->openSingleData(rs.getRaw(fontName), 110.0f)) {
+			if (!_fonts[fontName]->font->openSingleData(rs.getRaw(fontName), fontSize)) {
 				std::cout << fontName << " Not loaded" << std::endl;
 			} else {
 				std::cout << fontName << " Successfully Loaded" << std::endl;

@@ -22,7 +22,7 @@ corrade_add_resource(Centauri_RESOURCES res/resources.conf)
 
 FIND_LIBRARY(CHAKRA_LIBRARY ChakraCore PATHS ${CMAKE_INSTALL_PREFIX}/lib)
 
-find_package(Magnum REQUIRED GlfwApplication Shaders Text)
+find_package(Magnum REQUIRED GlfwApplication Shaders Text Primitives MeshTools)
 find_package(MagnumPlugins REQUIRED FreeTypeFont)
 
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
@@ -42,6 +42,8 @@ target_link_libraries(Centauri
     Magnum::Magnum
     Magnum::Shaders
     Magnum::Text
+    Magnum::MeshTools
+    Magnum::Primitives
     ${CHAKRA_LIBRARY}
 )
 
