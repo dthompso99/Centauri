@@ -24,8 +24,8 @@ FontContainer* Ui::loadFont(std::string fontName) {
 			Magnum::Utility::Resource rs("fonts");
 			if (!_fonts[fontName]->font->openSingleData(rs.getRaw(fontName), 110.0f)) {
 				std::cout << fontName << " Not loaded" << std::endl;
-			} else {{
-				std::cout << fontName << "Successfully Loaded" << std::endl;
+			} else {
+				std::cout << fontName << " Successfully Loaded" << std::endl;
 			}
 			_fonts[fontName]->font->fillGlyphCache(_fonts[fontName]->cache, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:-+,.!° ");
 			return _fonts[fontName];

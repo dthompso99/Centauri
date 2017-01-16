@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(include ${CINCLUDES} ${PROJECT_BINARY_DIR} )
 
 FILE(GLOB CENTAURI_SOURCE *.cpp)
 FILE(GLOB CENTAURI_SOURCE_UI UI/*.cpp)
+FILE(GLOB CENTAURI_SOURCE_RENDERER Renderer/*.cpp)
 
 find_package(Corrade REQUIRED)
 corrade_add_resource(Centauri_RESOURCES res/resources.conf)
@@ -34,7 +35,7 @@ include_directories(
 	${CMAKE_INSTALL_PREFIX}/include
 )
 
-add_executable(Centauri  ${CENTAURI_SOURCE} ${CENTAURI_SOURCE_UI} ${CROOT}/rc/resources.rc ${Centauri_RESOURCES})
+add_executable(Centauri  ${CENTAURI_SOURCE} ${CENTAURI_SOURCE_UI} ${CENTAURI_SOURCE_RENDERER} ${CROOT}/rc/resources.rc ${Centauri_RESOURCES})
 
 target_link_libraries(Centauri 
 	Magnum::Application

@@ -5,6 +5,7 @@
 #include <Magnum/DefaultFramebuffer.h>
 #include <Magnum/Platform/GlfwApplication.h>
 #include "UI/ui.h"
+#include "Renderer/renderer.h"
 
 class Centauri: public Magnum::Platform::Application {
     public:
@@ -15,6 +16,7 @@ class Centauri: public Magnum::Platform::Application {
         void mousePressEvent(MouseEvent& event) override;
         //void mouseReleaseEvent(MouseEvent& event) override;
         Ui* _ui;
+        Renderer* _renderer;
 };
 
 #endif
