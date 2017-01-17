@@ -25,6 +25,9 @@ FIND_LIBRARY(CHAKRA_LIBRARY ChakraCore PATHS ${CMAKE_INSTALL_PREFIX}/lib)
 find_package(Magnum REQUIRED GlfwApplication Shaders Text Primitives MeshTools)
 find_package(MagnumPlugins REQUIRED FreeTypeFont)
 
+find_package(Threads REQUIRED)
+FIND_LIBRARY(TINET_LIB TiNetwork PATHS ${CMAKE_INSTALL_PREFIX}/lib/static)
+
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/configure.h.cmake ${CMAKE_INSTALL_PREFIX}/include/configure.h)
@@ -37,7 +40,7 @@ include_directories(
 
 add_executable(Centauri  ${CENTAURI_SOURCE} ${CENTAURI_SOURCE_UI} ${CENTAURI_SOURCE_RENDERER} ${CROOT}/rc/resources.rc ${Centauri_RESOURCES})
 
-target_link_libraries(Centauri 
+target_link_libraries(Centauri LINK_PUBLIC
 	Magnum::Application
     Magnum::Magnum
     Magnum::Shaders
@@ -45,6 +48,8 @@ target_link_libraries(Centauri
     Magnum::MeshTools
     Magnum::Primitives
     ${CHAKRA_LIBRARY}
+    ${TINET_LIB}
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 
 

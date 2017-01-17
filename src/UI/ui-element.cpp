@@ -11,14 +11,17 @@ void UiElement::drawEvent() {
 		if ((*it)->renderMethod == 0) {
 			(*it)->mesh.draw((*it)->shader);
 		} else if ((*it)->renderMethod == 1) {
-			//(*it)->textShader.setVectorTexture(_ui->_cache.texture())
+			(*it)->textShader.setVectorTexture((*it)->fontContainer->cache.texture());
+			(*it)->textShader.setTransformationProjectionMatrix((*it)->projection * (*it)->transformation);
+//		        .setColor(Magnum::Color3{1.0f})
+//		        .setSmoothness(0.75f);
+			(*it)->text->render(text);
 			(*it)->text->mesh().draw((*it)->textShader);
 		}
 	}
 }
-void UiElement::test() {
-	std::cout << "Draw Event from Element " << std::endl;
-}
+
+
 //UiElement::~UiElement(){
 //
 //}

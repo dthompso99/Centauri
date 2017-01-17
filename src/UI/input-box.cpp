@@ -33,22 +33,30 @@ InputBox::InputBox(Ui* u): _ui(u) {
         .addVertexBuffer(frame->buffer, 0, Magnum::Shaders::VertexColor3D::Position{}, Magnum::Shaders::VertexColor3D::Color{});
     _drawables.push_back(frame);
 
-    FontContainer* f = _ui->loadFont("DejaVuSans.ttf", 3.14f);
+    //FontContainer* f = _ui->loadFont("DejaVuSans.ttf", 110.0f);
+    float padding=h * 0.07f;
 
     DrawableUi* textlayer = new DrawableUi(1);
-    textlayer->text.reset(new Magnum::Text::Renderer2D(*f->font, f->cache, 0.035f, Magnum::Text::Alignment::TopLeft));
+    textlayer->fontContainer = _ui->loadFont("arial.ttf", 150.0f);
+    textlayer->text.reset(new Magnum::Text::Renderer2D(*textlayer->fontContainer->font, textlayer->fontContainer->cache, h-(padding*2), Magnum::Text::Alignment::TopLeft ));
     textlayer->text->reserve(40, Magnum::BufferUsage::DynamicDraw, Magnum::BufferUsage::StaticDraw);
-    textlayer->textShader.setTransformationProjectionMatrix(textlayer->projection *
-    		Magnum::Matrix3::translation(1.0f/textlayer->projection.rotationScaling().diagonal()))
-    	.setColor(Magnum::Color3{1.0f})
-		.setOutlineColor(Magnum::Color3{0.95f})
-		.setOutlineRange(0.5f, 1.0f)
-		.setSmoothness(0.075f);
-    textlayer->textShader.setVectorTexture(f->cache.texture());
-    textlayer->text->render("This is a test");
+    textlayer->projection = Magnum::Matrix3::translation(Magnum::Vector2(x+padding,y+h-padding));
+    textlayer->textShader.setColor(Magnum::Color3{1.0f});
+    textlayer->textShader.setSmoothness(0.25f);
+    //    textlayer->projection = Magnum::Matrix3::scaling(Magnum::Vector2::yScale(Magnum::Vector2(Magnum::defaultFramebuffer.viewport().size()).aspectRatio()));
+
+//    textlayer->textShader.setTransformationProjectionMatrix(textlayer->projection *
+//    		Magnum::Matrix3::translation(1.0f/textlayer->projection.rotationScaling().diagonal()))
+//    	.setColor(Magnum::Color3{1.0f})
+//		.setSmoothness(0.25f);
+    textlayer->textShader.setVectorTexture(textlayer->fontContainer->cache.texture());
+
     _drawables.push_back(textlayer);
 }
-
+bool InputBox::onClick(Magnum::Platform::GlfwApplication::MouseEvent::Button button){
+	text = "Clicked!";
+	return true;
+}
 InputBox::~InputBox(){
 
 }

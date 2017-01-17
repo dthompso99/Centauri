@@ -8,15 +8,17 @@
 #include "Renderer/renderer.h"
 
 class Centauri: public Magnum::Platform::Application {
-    public:
-        explicit Centauri(const Arguments& arguments);
+public:
+	explicit Centauri(const Arguments& arguments);
 
-    private:
-        void drawEvent() override;
-        void mousePressEvent(MouseEvent& event) override;
-        //void mouseReleaseEvent(MouseEvent& event) override;
-        Ui* _ui;
-        Renderer* _renderer;
+private:
+	void drawEvent() override;
+	void mousePressEvent(MouseEvent& event) override;
+	void mouseMoveEvent(MouseMoveEvent & event) override;
+	//void mouseReleaseEvent(MouseEvent& event) override;
+	Ui* _ui;
+	Magnum::Vector2 mouse_pos;
+	Renderer* _renderer;
 };
 
 #endif

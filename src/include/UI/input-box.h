@@ -13,7 +13,8 @@ class InputBox : public UiElement{
 public:
 	InputBox(Ui *);
 	~InputBox();
-	std::string text = "Test Text";
+	bool onClick(Magnum::Platform::GlfwApplication::MouseEvent::Button button) override;
+//	std::string text = "Test Text";
 protected:
 	Ui* _ui;
 private:
