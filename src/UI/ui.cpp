@@ -3,6 +3,9 @@
 #include <iostream>
 #include "configure.h"
 #include <Magnum/Text/Renderer.h>
+#include "jsbinding.h"
+#include "centauri.h"
+
 
 
 void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState)
@@ -15,7 +18,7 @@ void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState)
 
 Ui::Ui(Centauri * c) :
 		_main(c), _manager(MAGNUM_PLUGINS_FONT_DIR) {
-	t = new TiNetwork();
+
 	_elements.push_back(new InputBox(this));
 
 	//init javascript context
@@ -30,17 +33,26 @@ Ui::Ui(Centauri * c) :
 	if (JsSetPromiseContinuationCallback(PromiseContinuationCallback, &taskQueue) != JsNoError)
 		throw "failed to set PromiseContinuationCallback.";
 
-	//TODO: perhaps compile the startup script in?
-	std::cout << "fetching script" << std::endl;
-//	t->http_get("http://uthertools.thompsoninnovations.com/centauri/ui.js", [](std::string body) {
-//		std::cout << "Get drake-tv.com thread id: " << " : " << body.length() << std::endl;
+	Ui::host = this;
+	addGlobalBinding();
+	addUiJsBindings();
+
+	Magnum::Utility::Resource rs("fonts");
+	std::string script = rs.get("ui.js");
+
+	if (JsRunScript(std::wstring(script.begin(), script.end()).c_str(), currentSourceContext++, L"", &result) != JsNoError)
+		throw "failed to execute script.";
+
+//	Net::Instance()->get()->http_get("http://uthertools.thompsoninnovations.com/centauri/ui.js", [](std::string body) {
+//		std::cout << "fetched script: " << body << std::endl;
 //	}, [](int err) {
 //		std::cout << "get error: " << err << std::endl;
 //	});
 }
 
 void Ui::drawEvent() {
-	t->poll();
+	jsLoop();
+
 	for (auto it = _elements.begin(); it != _elements.end(); ++it) {
 		(*it)->drawEvent();
 	}
@@ -79,6 +91,10 @@ FontContainer* Ui::loadFont(std::string fontName, float fontSize) {
 	} else {
 		return _fonts[key];
 	}
+}
+
+void Ui::addUiJsBindings(){
+
 }
 
 Ui::~Ui() {

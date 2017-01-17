@@ -11,7 +11,7 @@
 
 #include "ChakraCore.h"
 #include "Task.h"
-
+#include "jsbinding.h"
 #include "UI/input-box.h"
 #include "UI/font-container.h"
 #include "TiNetwork/TiNetwork.h"
@@ -19,7 +19,7 @@
 
 class Centauri;
 
-class Ui {
+class Ui : public JsGlobalBinding {
 public:
 	Ui(Centauri *);
 	void drawEvent();
@@ -29,11 +29,12 @@ public:
 
 private:
 	Centauri* _main;
+	void addUiJsBindings();
 	std::vector<UiElement*> _elements;
 	Corrade::PluginManager::Manager<Magnum::Text::AbstractFont> _manager;
 	std::map<std::string, FontContainer*> _fonts ;
-	TiNetwork* t;
-	std::queue<Task*> taskQueue;
+
+
 	JsRuntimeHandle runtime;
 	unsigned currentSourceContext;
 };

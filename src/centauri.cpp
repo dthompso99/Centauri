@@ -1,11 +1,13 @@
 #pragma once
 #include "centauri.h"
 #include <iostream>
+
 #include <Magnum/Renderer.h>
 
 Centauri::Centauri(const Arguments& arguments) :
 		Magnum::Platform::Application { arguments, Configuration { }.setWindowFlags(Magnum::Platform::GlfwApplication::Configuration::WindowFlag::Resizeable) } {
 //			Magnum::Platform::GlfwApplication::Configuration::setWindowFlags(WindowFlag::Resizeable);
+	Net::Instance()->init();
 	_ui = new Ui(this);
 	_renderer = new Renderer(this);
 	Magnum::Renderer::enable(Magnum::Renderer::Feature::Blending);
@@ -15,6 +17,7 @@ Centauri::Centauri(const Arguments& arguments) :
 }
 
 void Centauri::drawEvent() {
+	Net::Instance()->get()->poll();
 	Magnum::defaultFramebuffer.clear(Magnum::FramebufferClear::Color);
 	_renderer->drawEvent();
 	_ui->drawEvent();
