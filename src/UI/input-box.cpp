@@ -6,7 +6,12 @@
 
 
 InputBox::InputBox(Ui* u): _ui(u) {
+	render();
 
+}
+
+void InputBox::render(){
+	_drawables.clear();
     DrawableUi* background = new DrawableUi(0);
     Magnum::Vector3 data2[] = {
             { float(x), float(y), 0.0f}, {0.2f, 0.2f, 0.2f},
@@ -33,7 +38,6 @@ InputBox::InputBox(Ui* u): _ui(u) {
         .addVertexBuffer(frame->buffer, 0, Magnum::Shaders::VertexColor3D::Position{}, Magnum::Shaders::VertexColor3D::Color{});
     _drawables.push_back(frame);
 
-    //FontContainer* f = _ui->loadFont("DejaVuSans.ttf", 110.0f);
     float padding=h * 0.07f;
 
     DrawableUi* textlayer = new DrawableUi(1);
@@ -43,20 +47,29 @@ InputBox::InputBox(Ui* u): _ui(u) {
     textlayer->projection = Magnum::Matrix3::translation(Magnum::Vector2(x+padding,y+h-padding));
     textlayer->textShader.setColor(Magnum::Color3{1.0f});
     textlayer->textShader.setSmoothness(0.25f);
-    //    textlayer->projection = Magnum::Matrix3::scaling(Magnum::Vector2::yScale(Magnum::Vector2(Magnum::defaultFramebuffer.viewport().size()).aspectRatio()));
 
-//    textlayer->textShader.setTransformationProjectionMatrix(textlayer->projection *
-//    		Magnum::Matrix3::translation(1.0f/textlayer->projection.rotationScaling().diagonal()))
-//    	.setColor(Magnum::Color3{1.0f})
-//		.setSmoothness(0.25f);
     textlayer->textShader.setVectorTexture(textlayer->fontContainer->cache.texture());
 
     _drawables.push_back(textlayer);
 }
 bool InputBox::onClick(Magnum::Platform::GlfwApplication::MouseEvent::Button button){
-	text = "Clicked!";
+	keyboardActive = true;
 	return true;
 }
+void InputBox::onKeyPress(Magnum::Platform::Application::KeyEvent& event){
+	text = text + event.keyName();
+}
+
+void InputBox::setRefrence(JsValueRef j) {
+	jsref = j;
+	JsGlobalBinding::setCallback(jsref, L"setPosition", InputBox::JSsetPosition, nullptr);
+	JsGlobalBinding::setCallback(jsref, L"setSize", InputBox::JSsetSize, nullptr);
+//	UiSandbox::setCallback(jsref, L"setVisible", EditBox::JSsetVisible, nullptr);
+//	UiSandbox::setCallback(jsref, L"setEnabled", EditBox::JSsetEnabled, nullptr);
+//	UiSandbox::setCallback(jsref, L"setText", EditBox::JSsetText, nullptr);
+//	UiSandbox::setCallback(jsref, L"addEventListener", EditBox::JSaddEventListener, nullptr);
+}
+
 InputBox::~InputBox(){
 
 }

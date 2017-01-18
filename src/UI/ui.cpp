@@ -15,11 +15,13 @@ void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState)
 	std::queue<Task*> * q = (std::queue<Task*> *)callbackState;
 	q->push(new Task(task, 0, global, JS_INVALID_REFERENCE));
 }
+Ui* Ui::global_ui = NULL;
+JsValueRef Ui::JSUiObjectPrototype;
 
 Ui::Ui(Centauri * c) :
 		_main(c), _manager(MAGNUM_PLUGINS_FONT_DIR) {
+	global_ui = this;
 
-	_elements.push_back(new InputBox(this));
 
 	//init javascript context
 	JsContextRef context;
@@ -43,11 +45,9 @@ Ui::Ui(Centauri * c) :
 	if (JsRunScript(std::wstring(script.begin(), script.end()).c_str(), currentSourceContext++, L"", &result) != JsNoError)
 		throw "failed to execute script.";
 
-//	Net::Instance()->get()->http_get("http://uthertools.thompsoninnovations.com/centauri/ui.js", [](std::string body) {
-//		std::cout << "fetched script: " << body << std::endl;
-//	}, [](int err) {
-//		std::cout << "get error: " << err << std::endl;
-//	});
+}
+void Ui::addElement(UiElement* e){
+	_elements.push_back(e);
 }
 
 void Ui::drawEvent() {
@@ -59,15 +59,25 @@ void Ui::drawEvent() {
 }
 
 void Ui::mousePressEvent(Magnum::Platform::Application::MouseEvent& event, Magnum::Vector2 press) {
-	std::cout << "Mouse Event in UI handled" << std::endl;
+	setAllInactive();
 	for (auto it = _elements.begin(); it != _elements.end(); ++it) {
 		std::cout << "mouse: " << std::to_string(press.x()) << ", " << std::to_string(press.y()) << std::endl;
 		std::cout << "element: " << std::to_string((*it)->x) << ", " << std::to_string((*it)->y) << std::endl;
 		if (press.x() >= (*it)->x && press.x() <= (*it)->x + (*it)->w && press.y() >= (*it)->y && press.y() <= (*it)->y + (*it)->h) {
-			std::cout << "Handle Event!" << std::endl;
-//				return true;
-			(*it)->text = "Clicked!";
 			event.setAccepted((*it)->onClick(event.button()));
+		}
+	}
+}
+void Ui::setAllInactive(){
+	for (auto it = _elements.begin(); it != _elements.end(); ++it) {
+		(*it)->keyboardActive = false;
+	}
+}
+void Ui::keyPressEvent(Magnum::Platform::Application::KeyEvent & event){
+	std::cout << "Keypress: " << event.keyName() << std::endl;
+	for (auto it = _elements.begin(); it != _elements.end(); ++it) {
+		if ((*it)->keyboardActive) {
+			(*it)->onKeyPress(event);
 		}
 	}
 }
@@ -93,8 +103,48 @@ FontContainer* Ui::loadFont(std::string fontName, float fontSize) {
 	}
 }
 
-void Ui::addUiJsBindings(){
+//JSCreateElement
+JsValueRef CALLBACK Ui::JSCreateElement(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount,
+		void *callbackState) {
+	assert(!isConstructCall && argumentCount == 2 );
+	JsValueRef output = JS_INVALID_REFERENCE;
+	JsValueRef stringValue;
+	JsConvertValueToString(arguments[1], &stringValue);
+	const wchar_t *el;
+	size_t length;
+	JsStringToPointer(stringValue, &el, &length);
 
+	if (wcscmp(el, L"InputBox") == 0) {
+		InputBox* e = new InputBox(global_ui);
+		JsCreateExternalObject(e, nullptr, &output);
+		e->setRefrence(output);
+	}
+	JsSetPrototype(output, JSUiObjectPrototype);
+	return output;
+}
+
+JsValueRef CALLBACK Ui::JSAppendChild(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount,
+		void *callbackState) {
+	assert(!isConstructCall && (argumentCount == 2));
+	void* element;
+	JsGetExternalData(arguments[1], &element);
+//	std::string oType = static_cast<UiElement*>(element)->type;
+//	if (oType == "InputBox"){
+	global_ui->addElement(static_cast<UiElement*>(element));
+//	}
+	return arguments[0];
+}
+
+void Ui::addUiJsBindings(){
+	JsValueRef globalObject;
+	JsGetGlobalObject(&globalObject);
+
+	JsValueRef ui;
+	JsCreateObject(&ui);
+	setProperty(globalObject, L"ui", ui);
+	setCallback(ui, L"createElement", JSCreateElement, nullptr);
+	setCallback(ui, L"appendChild", JSAppendChild, nullptr);
+//	setCallback(ui, L"addEventListener", JSaddEventListener, nullptr);
 }
 
 Ui::~Ui() {

@@ -26,11 +26,14 @@ void Centauri::drawEvent() {
 }
 
 void Centauri::mousePressEvent(MouseEvent& event) {
-
 	_ui->mousePressEvent(event, mouse_pos);
 }
 void Centauri::mouseMoveEvent(MouseMoveEvent & event) {
 	mouse_pos = (Magnum::Vector2{event.position()} / Magnum::Vector2 { Magnum::defaultFramebuffer.viewport().size() } - Magnum::Vector2 { 0.5f, 0.5f })*Magnum::Vector2 { 2.0f, -2.0f } ;
+}
+
+void Centauri::keyPressEvent(KeyEvent & event){
+	_ui->keyPressEvent(event);
 }
 
 MAGNUM_APPLICATION_MAIN(Centauri)

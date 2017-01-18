@@ -261,6 +261,17 @@ ExternalProject_Add (BULLET
 	INSTALL_DIR ${CENTAURI_INSTALL}
 )
 
+#######################################
+# Cryptopp BUILD                      #
+#######################################
+
+ExternalProject_Add (CRYPTOPP
+	GIT_REPOSITORY https://github.com/weidai11/cryptopp.git
+	UPDATE_DISCONNECTED 1
+	PREFIX ${PROJECT_SOURCE_DIR}/git/cryptopp
+	CMAKE_ARGS ${CENTAURI_CMAKE_GLOBALS}  -DBUILD_SHARED=NO -DBUILD_STATIC=YES -DBUILD_TESTING=NO -DCMAKE_INSTALL_LIBDIR=${CENTAURI_INSTALL}/lib
+	INSTALL_DIR ${CENTAURI_INSTALL}
+)
 
 #######################################
 # CENT BUILD                          #
@@ -285,9 +296,9 @@ add_dependencies(FREETYPE LIBPNG ZLIB)
 add_dependencies(MAGNUM CORRADE GLFW OPENAL)
 add_dependencies(MAGNUMEXTRAS BULLET MAGNUM)
 add_dependencies(MAGNUMPLUGINS MAGNUM ZLIB LIBPNG FREETYPE LIBJPEG)
-add_dependencies(CENTAURI CHAKRA MAGNUM TINETWORK MAGNUMPLUGINS MAGNUMEXTRAS)
+add_dependencies(CENTAURI CHAKRA MAGNUM TINETWORK MAGNUMPLUGINS MAGNUMEXTRAS CRYPTOPP)
 add_custom_target(custom-install DEPENDS CENTAURI )
 
-add_dependencies(MAGNUMEXAMPLES MAGNUM SDL2 MAGNUMPLUGINS MAGNUMEXTRAS)
+add_dependencies(MAGNUMEXAMPLES MAGNUM SDL2 MAGNUMPLUGINS MAGNUMEXTRAS )
 add_custom_target(examples DEPENDS MAGNUMEXAMPLES )
 

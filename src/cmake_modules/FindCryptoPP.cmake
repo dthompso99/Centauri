@@ -54,7 +54,7 @@ FIND_PATH (CRYPTOPP_INCLUDE_DIR
   DOC "CryptoPP include directory")
 
 FIND_LIBRARY (CRYPTOPP_LIBRARY_DEBUG
-  NAMES cryptlibd cryptoppd
+  NAMES cryptlibd cryptoppd cryptopp-static
   HINTS ${CRYPTOPP_ROOT_DIR}
   PATH_SUFFIXES lib
   DOC "CryptoPP debug library")

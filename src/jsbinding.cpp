@@ -5,7 +5,6 @@
 
 JsGlobalBinding* JsGlobalBinding::host;
 
-JsValueRef JsGlobalBinding::JSUiPrototype;
 JsValueRef JsGlobalBinding::JSUiObjectPrototype;
 
 JsValueRef CALLBACK JsGlobalBinding::JSGet(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
@@ -111,6 +110,7 @@ void JsGlobalBinding::addGlobalBinding(){
 	setProperty(globalObject, L"http", http);
 	setCallback(http, L"get", JSGet, nullptr);
 }
+
 void JsGlobalBinding::jsLoop(){
 	if (!taskQueue.empty()) {
 		Task* task = taskQueue.front();

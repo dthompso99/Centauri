@@ -25,6 +25,8 @@ FIND_LIBRARY(CHAKRA_LIBRARY ChakraCore PATHS ${CMAKE_INSTALL_PREFIX}/lib)
 find_package(Magnum REQUIRED GlfwApplication Shaders Text Primitives MeshTools)
 find_package(MagnumPlugins REQUIRED FreeTypeFont)
 
+FIND_LIBRARY(CRYPTO_STATIC cryptopp-static PATHS ${CROOT}/output/lib)
+
 find_package(Threads REQUIRED)
 FIND_LIBRARY(TINET_LIB TiNetwork PATHS ${CMAKE_INSTALL_PREFIX}/lib/static)
 
@@ -50,6 +52,7 @@ target_link_libraries(Centauri LINK_PUBLIC
     ${CHAKRA_LIBRARY}
     ${TINET_LIB}
     ${CMAKE_THREAD_LIBS_INIT}
+    ${CRYPTO_STATIC}
 )
 
 

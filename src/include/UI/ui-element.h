@@ -16,6 +16,7 @@
 
 #include "UI/font-container.h"
 #include "configure.h"
+#include "ChakraCore.h"
 
 class Ui;
 
@@ -51,8 +52,19 @@ public:
 	float h = 0.07f;
 	float x = 0.5f;
 	float y = 0.5f;
+	bool acceptsKeyboard = false;
+	bool keyboardActive = false;
 	std::string text = "Test Text";
-	virtual bool onClick(Magnum::Platform::GlfwApplication::MouseEvent::Button button){return false;};
+	std::string type = "Element";
+	virtual void onKeyPress(Magnum::Platform::Application::KeyEvent& event){};
+	virtual bool onClick(Magnum::Platform::Application::MouseEvent::Button button){return false;};
+	virtual void render(){};
+	void setPosition(float x, float y);
+	static JsValueRef CALLBACK JSsetPosition(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
+
+	void setSize(float x, float y);
+	static JsValueRef CALLBACK JSsetSize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
+
 protected:
 	std::vector<DrawableUi*> _drawables;
 	Ui* _ui;

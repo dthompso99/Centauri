@@ -2,11 +2,7 @@
 #include "UI/ui-element.h"
 #include <iostream>
 
-//UiElement::UiElement(Ui* u): _ui(u){
-//
-//}
 void UiElement::drawEvent() {
-//	/_mesh.draw(_shader);
 	for (auto it = _drawables.begin(); it != _drawables.end(); ++it) {
 		if ((*it)->renderMethod == 0) {
 			(*it)->mesh.draw((*it)->shader);
@@ -21,7 +17,40 @@ void UiElement::drawEvent() {
 	}
 }
 
+void UiElement::setPosition(float newx, float newy) {
+	x = newx;
+	y = newy;
+	render();
+}
 
-//UiElement::~UiElement(){
-//
-//}
+JsValueRef CALLBACK UiElement::JSsetPosition(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount,
+		void *callbackState) {
+	JsValueRef output = JS_INVALID_REFERENCE;
+	void* ref;
+	JsGetExternalData(arguments[0], &ref);
+	double x = 0;
+	JsNumberToDouble(arguments[1], &x);
+	double y = 0;
+	JsNumberToDouble(arguments[2], &y);
+	static_cast<UiElement*>(ref)->setPosition(x, y);
+	return output;
+}
+
+void UiElement::setSize(float newx, float newy) {
+	w = newx;
+	h = newy;
+	render();
+}
+
+JsValueRef CALLBACK UiElement::JSsetSize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount,
+		void *callbackState) {
+	JsValueRef output = JS_INVALID_REFERENCE;
+	void* ref;
+	JsGetExternalData(arguments[0], &ref);
+	double x = 0;
+	JsNumberToDouble(arguments[1], &x);
+	double y = 0;
+	JsNumberToDouble(arguments[2], &y);
+	static_cast<UiElement*>(ref)->setSize(x, y);
+	return output;
+}
